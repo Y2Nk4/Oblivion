@@ -1,7 +1,8 @@
-import auth from '../controllers/auth.js'
-import koaRouter from 'koa-router'
+let auth = require('../controllers/auth.js')
+let koaRouter = require('koa-router')
 const router = koaRouter()
 
 router.post('/login', auth.userLogin)
+router.post('/register', auth.userRegister)
 
-export default router
+module.exports = router

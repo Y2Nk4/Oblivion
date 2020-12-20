@@ -1,9 +1,11 @@
 // import api from '../controllers/api.js'
-import koaRouter from 'koa-router'
-import user from './api/user'
+let koaRouter = require('koa-router')
+let user = require('./api/v1/user')
+let auth = require('./auth')
 const router = koaRouter()
 
 // Use api/user Routes
+router.use('/auth', auth.routes())
 router.use('/user', user.routes())
 
-export default router
+module.exports = router

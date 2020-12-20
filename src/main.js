@@ -6,10 +6,6 @@ import axios from 'axios'
 import router from './router/router'
 import VueRouter from 'vue-router'
 
-/* Antd Vue */
-// import Antd from 'ant-design-vue'
-// import 'ant-design-vue/dist/antd.css'
-
 /* Element UI */
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'

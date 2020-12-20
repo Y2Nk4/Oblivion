@@ -1,61 +1,28 @@
-import './env'
-import Koa from 'koa'
-import json from 'koa-json'
-import auth from './server/routes/auth.js'
-import api from './server/routes/api.js'
-import publicApi from './server/routes/public_api.js'
-import jwt from 'koa-jwt'
-import path from 'path'
-import serve from 'koa-static'
-import historyApiFallback from 'koa2-history-api-fallback'
-import koaRouter from 'koa-router'
-import koaBodyparser from 'koa-bodyparser'
-import KoaValidate from 'koa-validate'
-import responses from './server/helpers/responses'
-import accessLogger from './server/middlewares/accessLogger'
-import formatValidationError from './server/helpers/formatValidationError'
+require('./env')
+let Koa = require('koa')
+let json = require('koa-json')
+let api = require('./server/routes/api.js')
+let log4js = require('./server/config/log4js')
+let path = require('path')
+let serve = require('koa-static')
+let historyApiFallback = require('koa2-history-api-fallback')
+let koaRouter = require('koa-router')
+let koaBodyparser = require('koa-bodyparser')
+let formidable = require('koa2-formidable')
+let KoaValidate = require('koa-validate')
+let responses = require('./server/helpers/responses')
+let accessLogger = require('./server/middlewares/accessLogger')
+let jwt = require('koa-jwt')
+let formatValidationError = require('./server/helpers/formatValidationError')
+let session = require('koa-session')
+let sessionConfig = require('./server/config/session')
+let { levels } = require('koa-log4')
 
 // cors
 const cors = require('@koa/cors')
 
-// log处理
-const log4js = require('koa-log4')
-const { levels } = require('koa-log4')
-log4js.configure({
-    appenders: {
-        access: {
-            type: 'dateFile',
-            pattern: '-yyyy-MM-dd.log', // 生成文件的规则
-            filename: path.join('logs/', 'access.log') // 生成文件名
-        },
-        application: {
-            type: 'dateFile',
-            pattern: '-yyyy-MM-dd.log',
-            filename: path.join('logs/', 'application.log')
-        },
-        database: {
-            type: 'dateFile',
-            pattern: '-yyyy-MM-dd.log',
-            filename: path.join('logs/', 'database.log')
-        },
-        out: {
-            type: 'console'
-        }
-    },
-    categories: {
-        default: { appenders: [ 'out' ], level: 'WARN' },
-        access: { appenders: [ 'access' ], level: 'all' },
-        middleware: { appenders: [ 'out' ], level: 'all' },
-        database: { appenders: [ 'database' ], level: 'all' },
-        application: { appenders: [ 'application', 'out' ], level: 'all' },
-        SteamBot: { appenders: [ 'application', 'out' ], level: 'all' }
-    },
-    replaceConsole: true
-})
-
 // 加载sequelize的关联
 require('./server/config/db')
-require('./server/config/association')
 
 const app = new Koa()
 const router = koaRouter()
@@ -63,7 +30,11 @@ KoaValidate(app)
 
 let port = process.env.PORT
 
+// Cookie Keys
+app.keys = process.env.COOKIE_KEYS.split(',')
+
 app.use(koaBodyparser())
+    .use(formidable())
     .use(json())
     .use(accessLogger) // 美化访问日志(logger是middleware)
     // 记录访问日志
@@ -115,6 +86,7 @@ app.use(koaBodyparser())
             }
         }
     }))
+    .use(session(sessionConfig, app))
 
 app.on('error', function (err, ctx) {
     console.log('server error', err)
@@ -124,14 +96,12 @@ app.on('error', function (err, ctx) {
     }
 })
 
-router.use('/auth', auth.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
-router.use('/api/public', publicApi.routes()) // 挂载到public_api上
-router.use('/api', jwt({secret: process.env.JWT_SECRET}), api.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
+router.use('/api', api.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
 
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())
 app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录
 
-export default app.listen(port, () => {
+module.exports = app.listen(port, () => {
     console.log(`Koa is listening in ${port}`)
 })

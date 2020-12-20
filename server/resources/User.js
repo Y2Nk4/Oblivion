@@ -1,6 +1,6 @@
 import ResourceResponse from './ResourceResponse'
 
-export default ResourceResponse(function (user) {
+module.exports = ResourceResponse(function (user) {
     return {
         id: user.id,
         username: user.username,
