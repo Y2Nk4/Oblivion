@@ -36,14 +36,14 @@
         },
         methods: {
             ...mapActions({
-                authLogin: "auth/authLogin",
+                authLogin: 'auth/authLogin'
             }),
             async submitForm () {
-                let result = await this.authLogin({
+                await this.authLogin({
                     username: this.loginForm.username,
-                    password: this.loginForm.password,
+                    password: this.loginForm.password
                 })
-                this.$router.replace("/")
+                this.$router.replace('/')
             }
         }
     }
