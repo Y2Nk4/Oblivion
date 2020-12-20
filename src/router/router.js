@@ -1,6 +1,8 @@
 import VueRouter from 'vue-router'
 import Main from '../view/Main'
 import Login from '../view/Login'
+import store from '../store'
+import Vue from 'vue'
 // import Vue from 'vue'
 
 const router = new VueRouter({
@@ -22,21 +24,22 @@ const router = new VueRouter({
     ]
 })
 
-/* router.beforeEach((to, from, next) => {
-    const token = sessionStorage.getItem('demo-token')
-    if (to.path === '/') { // 如果是跳转到登录页的
-        if (token !== 'null' && token !== null) {
-            next('/todolist') // 如果有token就转向todolist不返回登录页
-        }
-        next() // 否则跳转回登录页
+router.beforeEach(async (to, form, next) => {
+    const TOKEN = localStorage.getItem('LOGIN_STATE')
+    if (TOKEN === 'SUCCESS') {
+        // 用户已登录 认证->放行->获取用户信息
+        next()
     } else {
-        if (token !== 'null' && token !== null) {
-            Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token // 注意Bearer后有个空格
-            next() // 如果有token就正常转向
+        if (to.meta.noAuth) {
+            await store.dispatch('checkIfLoggedIn')
+            next()
         } else {
-            next('/') // 否则跳转回登录页
+            Vue.prototype.$message.error('Unauthorized Access!')
+            setTimeout(() => {
+                next('/login')
+            }, 1500)
         }
     }
-}) */
+})
 
 export default router

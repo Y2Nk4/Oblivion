@@ -12,7 +12,7 @@
                             <el-input v-model="loginForm.password"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button id="login-button" type="primary" @click="login">登录</el-button>
+                            <el-button id="login-button" type="primary" @click="submitForm">Login</el-button>
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -24,7 +24,7 @@
 <script>
     import '../assets/less/views/auth.less'
     import '../assets/less/main.less'
-    import api from '../config/api'
+    import { mapActions } from 'vuex'
 
     export default {
         name: 'Login',
@@ -35,22 +35,15 @@
             }
         },
         methods: {
-            async login () {
-                let result = await this.$http.post(api.auth.login, this.loginForm)
-
-                if (result.data.success) {
-                    this.$message({ // 登录成功，显示提示语
-                        type: 'success',
-                        message: '登录成功'
-                    })
-                    localStorage.setItem('user-token', result.data.token)
-                } else {
-                    this.$message({
-                        type: 'error',
-                        message: result.data.error
-                    })
-                }
-                console.log(result)
+            ...mapActions({
+                authLogin: "auth/authLogin",
+            }),
+            async submitForm () {
+                let result = await this.authLogin({
+                    username: this.loginForm.username,
+                    password: this.loginForm.password,
+                })
+                this.$router.replace("/")
             }
         }
     }

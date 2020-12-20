@@ -33,6 +33,9 @@ Build with [Y2Nk4/node-koa-web-api-template](https://github.com/Y2Nk4/node-koa-w
 
 ```
 
+## API Reference
+[API Reference](./docs/api.md)
+
 ## To-Dos
 
 
