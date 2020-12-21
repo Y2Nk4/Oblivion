@@ -1,7 +1,7 @@
 import fetch from './fetch'
 export default {
     userInfo (params) {
-        return fetch.get('/user/info', params)
+        return fetch.get('/user/loggedInUserInfo', params)
     },
     userDetails (params) {
         return fetch.get('/user/getUserDetails', params)

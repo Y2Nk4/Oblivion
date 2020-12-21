@@ -17,7 +17,7 @@ axios.defaults.baseURL = appConfig.fetch_base_url
   return config
 }) */
 
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 
 // 响应拦截器
 axios.interceptors.response.use(

@@ -39,5 +39,5 @@ module.exports = {
     rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
     renew: process.env.SESSION_AUTO_RENEW || false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false) */
     secure: process.env.ENV !== 'LOCALDEV', /** (boolean) secure cookie */
-    sameSite: (process.env.ENV && process.env.ENV.indexOf('DEV') !== -1) ? 'None' : null /** (string) session cookie sameSite options (default null, don't set it) */
+    sameSite: null /** (string) session cookie sameSite options (default null, don't set it) */
 }

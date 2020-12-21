@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message DoorBellBroadcastPkg {
+	float board_vcc = 1;
+}

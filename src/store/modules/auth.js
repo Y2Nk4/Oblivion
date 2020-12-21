@@ -28,11 +28,6 @@ const actions = {
         let res = await auth.register(params)
         commit('SET_LOGIN_STATE')
         commit('SET_USER_INFO', res.data)
-    },
-    async checkIfLoggedIn ({ state, commit }, params) {
-        let res = await auth.checkIfLoggedIn(params)
-        commit('SET_LOGIN_STATE')
-        commit('SET_USER_INFO', res.data)
     }
 }
 export default {

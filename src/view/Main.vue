@@ -1,39 +1,58 @@
 <template>
-  <div class="main" id="main">
-      <el-container class="main-container">
-          <el-popconfirm
-              confirmButtonText='好的'
-              cancelButtonText='不用了'
-              icon="el-icon-info"
-              iconColor="red"
-              title="这是一段内容确定删除吗？"
-          >
-              <el-button slot="reference">删除</el-button>
-          </el-popconfirm>
-      </el-container>
-  </div>
+    <el-container class="main" id="main">
+        <common-sidebar/>
+        <el-container>
+            <el-main>
+                <div class="main-overview-row">
+                    <overview-card title="Temperature" value="27" extra-description="℃"/>
+                    <overview-card title="Status" value="Running"/>
+                    <overview-card title="Running Time" value="32hr3min"/>
+                    <overview-card title="Devices" value="3"/>
+                </div>
+                <!--<div><p>我是一段主要文字</p></div>-->
+            </el-main>
+        </el-container>
+    </el-container>
 </template>
 
 <script>
-    import '../assets/less/main.less'
+import '../assets/less/main.less'
+import CommonHeader from '@/components/Common/Header'
+import CommonSidebar from '@/components/Common/Sidebar'
+import OverviewCard from '@/components/Cards/OverviewCard'
 
-    export default {
-        name: 'Main',
+export default {
+    name: 'Main',
+    components: {
+        CommonHeader, CommonSidebar, OverviewCard
+    },
+    data () {
+        return {
+            CurrentTab: 'Glance'
+        }
+    },
 
-        data () {
-            return {
-                CurrentTab: 'Glance'
-            }
-        },
+    methods: {
+        changeTab () {
 
-        methods: {
-            changeTab () {
-
-            }
         }
     }
+}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.main-row{
+    display: flex;
+}
+.main-overview-row{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    position: relative;
+    justify-content: flex-start;
 
+    .overview-card{
+        margin: 10px;
+    }
+}
 </style>

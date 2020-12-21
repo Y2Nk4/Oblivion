@@ -11,11 +11,17 @@ const router = new VueRouter({
     routes: [
         {
             path: '/',
-            component: Main
+            component: Main,
+            meta: {
+                headerMenuIndex: 'home'
+            }
         },
         {
             path: '/login',
-            component: Login
+            component: Login,
+            meta: {
+                noAuth: true
+            }
         },
         {
             path: '*',
@@ -34,7 +40,7 @@ router.beforeEach(async (to, form, next) => {
             await store.dispatch('checkIfLoggedIn')
             next()
         } else {
-            Vue.prototype.$message.error('Unauthorized Access!')
+            Vue.prototype.$message.error('Please Login First')
             setTimeout(() => {
                 next('/login')
             }, 1500)

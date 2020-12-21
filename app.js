@@ -12,6 +12,7 @@ let formidable = require('koa2-formidable')
 let KoaValidate = require('koa-validate')
 let responses = require('./server/helpers/responses')
 let accessLogger = require('./server/middlewares/accessLogger')
+let setResponseTimeHeader = require('./server/middlewares/setResponseTimeHeader')
 let jwt = require('koa-jwt')
 let formatValidationError = require('./server/helpers/formatValidationError')
 let session = require('koa-session')
@@ -33,8 +34,11 @@ let port = process.env.PORT
 // Cookie Keys
 app.keys = process.env.COOKIE_KEYS.split(',')
 
-app.use(koaBodyparser())
+app.proxy = process.env.ENV === 'LOCALDEV'
+
+app.use(setResponseTimeHeader)
     .use(formidable())
+    .use(koaBodyparser())
     .use(json())
     .use(accessLogger) // 美化访问日志(logger是middleware)
     // 记录访问日志
@@ -105,3 +109,6 @@ app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为
 module.exports = app.listen(port, () => {
     console.log(`Koa is listening in ${port}`)
 })
+
+// Start MQTT Broker
+require('./server/services/MQTTBroker/MQTTBroker')

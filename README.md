@@ -11,13 +11,14 @@ Build with [Y2Nk4/node-koa-web-api-template](https://github.com/Y2Nk4/node-koa-w
 ```
 ======================================              =============       ========================
 | Oblivion Center                    |   mongoose   | MongoDB   |       | FrontEnd             |
-|                                    | =============|           |       |                      |
+|                                    |==============|           |       |                      |
 | the backend system based on        |              =============       | Vue, Vue-Antd        |
 | Node & Koa                         |==================================| ECharts for graphs   |
-======================================                                  |                      |
-                ||                                                      ========================
+| MQTT & Aedes                       |                                  |                      |
+======================================                                  ========================
+                ||
                 || Data Packed by ProtoBuf
-                || through UDP broadcast
+                || through MQTT
                 ||
                 |================================|
                 ||                              ||

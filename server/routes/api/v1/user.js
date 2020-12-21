@@ -5,7 +5,7 @@ const router = koaRouter()
 const privateRouter = koaRouter()
 privateRouter.use(userAuth())
 
-privateRouter.get('/info', user.getUserInfo) // 定义url的参数是id
+privateRouter.get('/loggedInUserInfo', user.getUserInfo)
 
 router.use(privateRouter.routes())
 module.exports = router

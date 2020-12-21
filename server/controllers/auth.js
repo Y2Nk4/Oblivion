@@ -21,7 +21,7 @@ const userLogin = async function (ctx) {
                 error: 'Username does not match with the password'
             }
         } else {
-            const userToken = {
+            /* const userToken = {
                 name: userInfo.username,
                 id: userInfo.id
             }
@@ -29,6 +29,12 @@ const userLogin = async function (ctx) {
             ctx.body = {
                 success: true,
                 token: token // 返回token
+            } */
+            if (process.env.AUTH_DRIVER === 'JWT') {
+                return ctx.success(userInfo.generateJWTToken()) // 签发token
+            } else if (process.env.AUTH_DRIVER === 'SESSION') {
+                ctx.session.loggedInUserId = userInfo.id
+                return ctx.success(UserResource(userInfo))
             }
         }
     } else {
