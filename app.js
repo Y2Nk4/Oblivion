@@ -1,8 +1,10 @@
 require('./env')
+require('./server/config/bus')
 let Koa = require('koa')
 let json = require('koa-json')
 let api = require('./server/routes/api.js')
 let log4js = require('./server/config/log4js')
+let sensorcenter = require('./server/config/sensorcenter')
 let path = require('path')
 let serve = require('koa-static')
 let historyApiFallback = require('koa2-history-api-fallback')
@@ -109,6 +111,3 @@ app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为
 module.exports = app.listen(port, () => {
     console.log(`Koa is listening in ${port}`)
 })
-
-// Start MQTT Broker
-require('./server/services/MQTTBroker/MQTTBroker')
