@@ -836,6 +836,7 @@
          * @property {number|null} [mqtt_ip] DeviceConfig mqtt_ip
          * @property {number|null} [mqtt_port] DeviceConfig mqtt_port
          * @property {string|null} [register_topic] DeviceConfig register_topic
+         * @property {boolean|null} [is_registered] DeviceConfig is_registered
          */
 
         /**
@@ -879,6 +880,14 @@
         DeviceConfig.prototype.register_topic = ''
 
         /**
+         * DeviceConfig is_registered.
+         * @member {boolean} is_registered
+         * @memberof DeviceConfig
+         * @instance
+         */
+        DeviceConfig.prototype.is_registered = false
+
+        /**
          * Creates a new DeviceConfig instance using the specified properties.
          * @function create
          * @memberof DeviceConfig
@@ -904,6 +913,7 @@
             if (message.mqtt_ip != null && Object.hasOwnProperty.call(message, 'mqtt_ip')) { writer.uint32(/* id 1, wireType 0 = */8).uint32(message.mqtt_ip) }
             if (message.mqtt_port != null && Object.hasOwnProperty.call(message, 'mqtt_port')) { writer.uint32(/* id 2, wireType 0 = */16).uint32(message.mqtt_port) }
             if (message.register_topic != null && Object.hasOwnProperty.call(message, 'register_topic')) { writer.uint32(/* id 3, wireType 2 = */26).string(message.register_topic) }
+            if (message.is_registered != null && Object.hasOwnProperty.call(message, 'is_registered')) { writer.uint32(/* id 4, wireType 0 = */32).bool(message.is_registered) }
             return writer
         }
 
@@ -945,6 +955,9 @@
                     break
                 case 3:
                     message.register_topic = reader.string()
+                    break
+                case 4:
+                    message.is_registered = reader.bool()
                     break
                 default:
                     reader.skipType(tag & 7)
@@ -988,6 +1001,9 @@
             if (message.register_topic != null && message.hasOwnProperty('register_topic')) {
                 if (!$util.isString(message.register_topic)) { return 'register_topic: string expected' }
             }
+            if (message.is_registered != null && message.hasOwnProperty('is_registered')) {
+                if (typeof message.is_registered !== 'boolean') { return 'is_registered: boolean expected' }
+            }
             return null
         }
 
@@ -1005,6 +1021,7 @@
             if (object.mqtt_ip != null) { message.mqtt_ip = object.mqtt_ip >>> 0 }
             if (object.mqtt_port != null) { message.mqtt_port = object.mqtt_port >>> 0 }
             if (object.register_topic != null) { message.register_topic = String(object.register_topic) }
+            if (object.is_registered != null) { message.is_registered = Boolean(object.is_registered) }
             return message
         }
 
@@ -1024,10 +1041,12 @@
                 object.mqtt_ip = 0
                 object.mqtt_port = 0
                 object.register_topic = ''
+                object.is_registered = false
             }
             if (message.mqtt_ip != null && message.hasOwnProperty('mqtt_ip')) { object.mqtt_ip = message.mqtt_ip }
             if (message.mqtt_port != null && message.hasOwnProperty('mqtt_port')) { object.mqtt_port = message.mqtt_port }
             if (message.register_topic != null && message.hasOwnProperty('register_topic')) { object.register_topic = message.register_topic }
+            if (message.is_registered != null && message.hasOwnProperty('is_registered')) { object.is_registered = message.is_registered }
             return object
         }
 
@@ -1043,6 +1062,456 @@
         }
 
         return DeviceConfig
+    })()
+
+    $root.RunRecord = (function () {
+        /**
+         * Properties of a RunRecord.
+         * @exports IRunRecord
+         * @interface IRunRecord
+         * @property {number|null} [run_count] RunRecord run_count
+         * @property {Array.<ITemperatureRecord>|null} [temperature_record] RunRecord temperature_record
+         */
+
+        /**
+         * Constructs a new RunRecord.
+         * @exports RunRecord
+         * @classdesc Represents a RunRecord.
+         * @implements IRunRecord
+         * @constructor
+         * @param {IRunRecord=} [properties] Properties to set
+         */
+        function RunRecord (properties) {
+            this.temperature_record = []
+            if (properties) {
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+                    if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+                }
+            }
+        }
+
+        /**
+         * RunRecord run_count.
+         * @member {number} run_count
+         * @memberof RunRecord
+         * @instance
+         */
+        RunRecord.prototype.run_count = 0
+
+        /**
+         * RunRecord temperature_record.
+         * @member {Array.<ITemperatureRecord>} temperature_record
+         * @memberof RunRecord
+         * @instance
+         */
+        RunRecord.prototype.temperature_record = $util.emptyArray
+
+        /**
+         * Creates a new RunRecord instance using the specified properties.
+         * @function create
+         * @memberof RunRecord
+         * @static
+         * @param {IRunRecord=} [properties] Properties to set
+         * @returns {RunRecord} RunRecord instance
+         */
+        RunRecord.create = function create (properties) {
+            return new RunRecord(properties)
+        }
+
+        /**
+         * Encodes the specified RunRecord message. Does not implicitly {@link RunRecord.verify|verify} messages.
+         * @function encode
+         * @memberof RunRecord
+         * @static
+         * @param {IRunRecord} message RunRecord message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RunRecord.encode = function encode (message, writer) {
+            if (!writer) { writer = $Writer.create() }
+            if (message.run_count != null && Object.hasOwnProperty.call(message, 'run_count')) { writer.uint32(/* id 1, wireType 0 = */8).uint32(message.run_count) }
+            if (message.temperature_record != null && message.temperature_record.length) {
+                for (var i = 0; i < message.temperature_record.length; ++i) { $root.TemperatureRecord.encode(message.temperature_record[i], writer.uint32(/* id 2, wireType 2 = */18).fork()).ldelim() }
+            }
+            return writer
+        }
+
+        /**
+         * Encodes the specified RunRecord message, length delimited. Does not implicitly {@link RunRecord.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof RunRecord
+         * @static
+         * @param {IRunRecord} message RunRecord message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RunRecord.encodeDelimited = function encodeDelimited (message, writer) {
+            return this.encode(message, writer).ldelim()
+        }
+
+        /**
+         * Decodes a RunRecord message from the specified reader or buffer.
+         * @function decode
+         * @memberof RunRecord
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {RunRecord} RunRecord
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RunRecord.decode = function decode (reader, length) {
+            if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+            var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.RunRecord()
+            while (reader.pos < end) {
+                var tag = reader.uint32()
+                switch (tag >>> 3) {
+                case 1:
+                    message.run_count = reader.uint32()
+                    break
+                case 2:
+                    if (!(message.temperature_record && message.temperature_record.length)) { message.temperature_record = [] }
+                    message.temperature_record.push($root.TemperatureRecord.decode(reader, reader.uint32()))
+                    break
+                default:
+                    reader.skipType(tag & 7)
+                    break
+                }
+            }
+            return message
+        }
+
+        /**
+         * Decodes a RunRecord message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof RunRecord
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {RunRecord} RunRecord
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RunRecord.decodeDelimited = function decodeDelimited (reader) {
+            if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+            return this.decode(reader, reader.uint32())
+        }
+
+        /**
+         * Verifies a RunRecord message.
+         * @function verify
+         * @memberof RunRecord
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        RunRecord.verify = function verify (message) {
+            if (typeof message !== 'object' || message === null) { return 'object expected' }
+            if (message.run_count != null && message.hasOwnProperty('run_count')) {
+                if (!$util.isInteger(message.run_count)) { return 'run_count: integer expected' }
+            }
+            if (message.temperature_record != null && message.hasOwnProperty('temperature_record')) {
+                if (!Array.isArray(message.temperature_record)) { return 'temperature_record: array expected' }
+                for (var i = 0; i < message.temperature_record.length; ++i) {
+                    var error = $root.TemperatureRecord.verify(message.temperature_record[i])
+                    if (error) { return 'temperature_record.' + error }
+                }
+            }
+            return null
+        }
+
+        /**
+         * Creates a RunRecord message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof RunRecord
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {RunRecord} RunRecord
+         */
+        RunRecord.fromObject = function fromObject (object) {
+            if (object instanceof $root.RunRecord) { return object }
+            var message = new $root.RunRecord()
+            if (object.run_count != null) { message.run_count = object.run_count >>> 0 }
+            if (object.temperature_record) {
+                if (!Array.isArray(object.temperature_record)) { throw TypeError('.RunRecord.temperature_record: array expected') }
+                message.temperature_record = []
+                for (var i = 0; i < object.temperature_record.length; ++i) {
+                    if (typeof object.temperature_record[i] !== 'object') { throw TypeError('.RunRecord.temperature_record: object expected') }
+                    message.temperature_record[i] = $root.TemperatureRecord.fromObject(object.temperature_record[i])
+                }
+            }
+            return message
+        }
+
+        /**
+         * Creates a plain object from a RunRecord message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof RunRecord
+         * @static
+         * @param {RunRecord} message RunRecord
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        RunRecord.toObject = function toObject (message, options) {
+            if (!options) { options = {} }
+            var object = {}
+            if (options.arrays || options.defaults) { object.temperature_record = [] }
+            if (options.defaults) { object.run_count = 0 }
+            if (message.run_count != null && message.hasOwnProperty('run_count')) { object.run_count = message.run_count }
+            if (message.temperature_record && message.temperature_record.length) {
+                object.temperature_record = []
+                for (var j = 0; j < message.temperature_record.length; ++j) { object.temperature_record[j] = $root.TemperatureRecord.toObject(message.temperature_record[j], options) }
+            }
+            return object
+        }
+
+        /**
+         * Converts this RunRecord to JSON.
+         * @function toJSON
+         * @memberof RunRecord
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        RunRecord.prototype.toJSON = function toJSON () {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+        }
+
+        return RunRecord
+    })()
+
+    $root.TemperatureRecord = (function () {
+        /**
+         * Properties of a TemperatureRecord.
+         * @exports ITemperatureRecord
+         * @interface ITemperatureRecord
+         * @property {number|null} [temperature_value] TemperatureRecord temperature_value
+         * @property {number|null} [humidity_value] TemperatureRecord humidity_value
+         * @property {number|null} [pressure_value] TemperatureRecord pressure_value
+         * @property {number|null} [delta] TemperatureRecord delta
+         */
+
+        /**
+         * Constructs a new TemperatureRecord.
+         * @exports TemperatureRecord
+         * @classdesc Represents a TemperatureRecord.
+         * @implements ITemperatureRecord
+         * @constructor
+         * @param {ITemperatureRecord=} [properties] Properties to set
+         */
+        function TemperatureRecord (properties) {
+            if (properties) {
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i) {
+                    if (properties[keys[i]] != null) { this[keys[i]] = properties[keys[i]] }
+                }
+            }
+        }
+
+        /**
+         * TemperatureRecord temperature_value.
+         * @member {number} temperature_value
+         * @memberof TemperatureRecord
+         * @instance
+         */
+        TemperatureRecord.prototype.temperature_value = 0
+
+        /**
+         * TemperatureRecord humidity_value.
+         * @member {number} humidity_value
+         * @memberof TemperatureRecord
+         * @instance
+         */
+        TemperatureRecord.prototype.humidity_value = 0
+
+        /**
+         * TemperatureRecord pressure_value.
+         * @member {number} pressure_value
+         * @memberof TemperatureRecord
+         * @instance
+         */
+        TemperatureRecord.prototype.pressure_value = 0
+
+        /**
+         * TemperatureRecord delta.
+         * @member {number} delta
+         * @memberof TemperatureRecord
+         * @instance
+         */
+        TemperatureRecord.prototype.delta = 0
+
+        /**
+         * Creates a new TemperatureRecord instance using the specified properties.
+         * @function create
+         * @memberof TemperatureRecord
+         * @static
+         * @param {ITemperatureRecord=} [properties] Properties to set
+         * @returns {TemperatureRecord} TemperatureRecord instance
+         */
+        TemperatureRecord.create = function create (properties) {
+            return new TemperatureRecord(properties)
+        }
+
+        /**
+         * Encodes the specified TemperatureRecord message. Does not implicitly {@link TemperatureRecord.verify|verify} messages.
+         * @function encode
+         * @memberof TemperatureRecord
+         * @static
+         * @param {ITemperatureRecord} message TemperatureRecord message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        TemperatureRecord.encode = function encode (message, writer) {
+            if (!writer) { writer = $Writer.create() }
+            if (message.temperature_value != null && Object.hasOwnProperty.call(message, 'temperature_value')) { writer.uint32(/* id 1, wireType 5 = */13).float(message.temperature_value) }
+            if (message.humidity_value != null && Object.hasOwnProperty.call(message, 'humidity_value')) { writer.uint32(/* id 2, wireType 5 = */21).float(message.humidity_value) }
+            if (message.pressure_value != null && Object.hasOwnProperty.call(message, 'pressure_value')) { writer.uint32(/* id 3, wireType 5 = */29).float(message.pressure_value) }
+            if (message.delta != null && Object.hasOwnProperty.call(message, 'delta')) { writer.uint32(/* id 4, wireType 0 = */32).uint32(message.delta) }
+            return writer
+        }
+
+        /**
+         * Encodes the specified TemperatureRecord message, length delimited. Does not implicitly {@link TemperatureRecord.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof TemperatureRecord
+         * @static
+         * @param {ITemperatureRecord} message TemperatureRecord message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        TemperatureRecord.encodeDelimited = function encodeDelimited (message, writer) {
+            return this.encode(message, writer).ldelim()
+        }
+
+        /**
+         * Decodes a TemperatureRecord message from the specified reader or buffer.
+         * @function decode
+         * @memberof TemperatureRecord
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {TemperatureRecord} TemperatureRecord
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        TemperatureRecord.decode = function decode (reader, length) {
+            if (!(reader instanceof $Reader)) { reader = $Reader.create(reader) }
+            var end = length === undefined ? reader.len : reader.pos + length; var message = new $root.TemperatureRecord()
+            while (reader.pos < end) {
+                var tag = reader.uint32()
+                switch (tag >>> 3) {
+                case 1:
+                    message.temperature_value = reader.float()
+                    break
+                case 2:
+                    message.humidity_value = reader.float()
+                    break
+                case 3:
+                    message.pressure_value = reader.float()
+                    break
+                case 4:
+                    message.delta = reader.uint32()
+                    break
+                default:
+                    reader.skipType(tag & 7)
+                    break
+                }
+            }
+            return message
+        }
+
+        /**
+         * Decodes a TemperatureRecord message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof TemperatureRecord
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {TemperatureRecord} TemperatureRecord
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        TemperatureRecord.decodeDelimited = function decodeDelimited (reader) {
+            if (!(reader instanceof $Reader)) { reader = new $Reader(reader) }
+            return this.decode(reader, reader.uint32())
+        }
+
+        /**
+         * Verifies a TemperatureRecord message.
+         * @function verify
+         * @memberof TemperatureRecord
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        TemperatureRecord.verify = function verify (message) {
+            if (typeof message !== 'object' || message === null) { return 'object expected' }
+            if (message.temperature_value != null && message.hasOwnProperty('temperature_value')) {
+                if (typeof message.temperature_value !== 'number') { return 'temperature_value: number expected' }
+            }
+            if (message.humidity_value != null && message.hasOwnProperty('humidity_value')) {
+                if (typeof message.humidity_value !== 'number') { return 'humidity_value: number expected' }
+            }
+            if (message.pressure_value != null && message.hasOwnProperty('pressure_value')) {
+                if (typeof message.pressure_value !== 'number') { return 'pressure_value: number expected' }
+            }
+            if (message.delta != null && message.hasOwnProperty('delta')) {
+                if (!$util.isInteger(message.delta)) { return 'delta: integer expected' }
+            }
+            return null
+        }
+
+        /**
+         * Creates a TemperatureRecord message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof TemperatureRecord
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {TemperatureRecord} TemperatureRecord
+         */
+        TemperatureRecord.fromObject = function fromObject (object) {
+            if (object instanceof $root.TemperatureRecord) { return object }
+            var message = new $root.TemperatureRecord()
+            if (object.temperature_value != null) { message.temperature_value = Number(object.temperature_value) }
+            if (object.humidity_value != null) { message.humidity_value = Number(object.humidity_value) }
+            if (object.pressure_value != null) { message.pressure_value = Number(object.pressure_value) }
+            if (object.delta != null) { message.delta = object.delta >>> 0 }
+            return message
+        }
+
+        /**
+         * Creates a plain object from a TemperatureRecord message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof TemperatureRecord
+         * @static
+         * @param {TemperatureRecord} message TemperatureRecord
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        TemperatureRecord.toObject = function toObject (message, options) {
+            if (!options) { options = {} }
+            var object = {}
+            if (options.defaults) {
+                object.temperature_value = 0
+                object.humidity_value = 0
+                object.pressure_value = 0
+                object.delta = 0
+            }
+            if (message.temperature_value != null && message.hasOwnProperty('temperature_value')) { object.temperature_value = options.json && !isFinite(message.temperature_value) ? String(message.temperature_value) : message.temperature_value }
+            if (message.humidity_value != null && message.hasOwnProperty('humidity_value')) { object.humidity_value = options.json && !isFinite(message.humidity_value) ? String(message.humidity_value) : message.humidity_value }
+            if (message.pressure_value != null && message.hasOwnProperty('pressure_value')) { object.pressure_value = options.json && !isFinite(message.pressure_value) ? String(message.pressure_value) : message.pressure_value }
+            if (message.delta != null && message.hasOwnProperty('delta')) { object.delta = message.delta }
+            return object
+        }
+
+        /**
+         * Converts this TemperatureRecord to JSON.
+         * @function toJSON
+         * @memberof TemperatureRecord
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        TemperatureRecord.prototype.toJSON = function toJSON () {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+        }
+
+        return TemperatureRecord
     })()
 
     return $root

@@ -1,5 +1,5 @@
-import user from '../models/User.js'
-import userResource from '../resources/User'
+import user from '../../../../models/User.js'
+import userResource from '../../../../resources/User'
 
 const getUserInfo = async function (ctx) {
     console.log(ctx.state.user)

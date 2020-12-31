@@ -22,8 +22,8 @@ SensorCenter.prototype.subscribeDefaultTopics = function () {
 
         this.MQTT_CONN.on('message', (topic, message) => {
             // Receive message from default topics
-            logger.info('received message', topic)
-            if (Object.keys(this.defaultTopics).includes(topic)) {
+            logger.info('received message', topic.toString('base64'))
+            if (this.defaultTopics[topic] && typeof this.defaultTopics[topic] === 'function') {
                 this.defaultTopics[topic].bind(this)(message)
             }
         })

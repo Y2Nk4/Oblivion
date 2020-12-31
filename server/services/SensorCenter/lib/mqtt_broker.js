@@ -11,6 +11,9 @@ SensorCenter.prototype.createServer = function () {
         this.MQTT_Broker.on('client', (client) => {
             logger.info('New Client connected to the server: ', client.id)
         })
+        this.MQTT_Broker.on('publish', (packet, client) => {
+            logger.info('New Message published by: ', client ? client.id : 'null', packet)
+        })
 
         this.MQTT_Broker_Server.listen(this.config.mqttBrokerPort, () => {
             this.emit('MQTT_BROKER_ON', this.config.mqttBrokerPort)

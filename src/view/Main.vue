@@ -9,6 +9,9 @@
                     <overview-card title="Running Time" value="32hr3min"/>
                     <overview-card title="Devices" value="3"/>
                 </div>
+                <div>
+                    <p>所有设备</p>
+                </div>
                 <!--<div><p>我是一段主要文字</p></div>-->
             </el-main>
         </el-container>

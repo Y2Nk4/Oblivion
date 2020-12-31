@@ -45,7 +45,7 @@ let schema = new mongoose.Schema({
 schema.plugin(mongo.AutoIncrement, {inc_field: 'id'})
 schema.plugin(beautifyUnique)
 schema.loadClass(User)
-schema.index({ username: 1, email: 1 }, { unique: true})
+schema.index({ username: 1, email: 1 }, { unique: true })
 
 module.exports = mongo.model('users', schema)
 
