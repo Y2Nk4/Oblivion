@@ -44,7 +44,7 @@ SensorCenter.prototype.defaultTopics = {
             })
             if (data.temperature_record && data.temperature_record.length > 0) {
                 let task = Promise.resolve()
-                data.temperature_record.forEach(record => {
+                data.temperature_record.reverse().forEach(record => {
                     record.delta = record.delta || 0
                     let recDate = !record.delta ? receivedDate : new Date(receivedDate.getTime() - (record.delta * data.measure_interval * 1000))
                     task.then(SensorData.create({

@@ -1,11 +1,11 @@
-import device from '../../api/device'
+import sensorData from '../../api/sensor_data'
 const state = {
 }
 const mutations = {
 }
 const actions = {
-    async getAllDevices ({ state, commit }, params) {
-        let res = await device.getAllDevices(params)
+    async readSensorData ({ state, commit }, params) {
+        let res = await sensorData.readSensorData(params)
         return res.data.data
     }
 }
