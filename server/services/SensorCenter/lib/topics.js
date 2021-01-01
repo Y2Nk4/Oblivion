@@ -46,8 +46,8 @@ SensorCenter.prototype.defaultTopics = {
                 let task = Promise.resolve()
                 let length = data.temperature_record.length
                 data.temperature_record.reverse().forEach(record => {
-                    record.delta = record.delta || 0
-                    let recDate = !record.delta ? receivedDate : new Date(receivedDate.getTime() + ((-length + record.delta + 1) * data.measure_interval * 1000))
+                    let recDate = (!record.delta && record.delta !== 0) ? receivedDate : new Date(receivedDate.getTime() + ((record.delta + 1 - length) * data.measure_interval * 1000))
+                    console.log('delta', record.delta, recDate)
                     task.then(SensorData.create({
                         value: record.temperature_value,
                         device_mac: clientMacAddr,
