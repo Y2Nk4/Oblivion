@@ -48,6 +48,11 @@
                     <p></p>
                     <v-chart :options="temperatureGraphOptions" ref="temperatureGraph" autoresize/>
                 </div>
+
+                <div>
+                    <p></p>
+                    <v-chart :options="humidityGraphOptions" ref="humidityGraph" autoresize/>
+                </div>
                 <!--<div><p>我是一段主要文字</p></div>-->
             </el-main>
         </el-container>
@@ -119,6 +124,56 @@ export default {
                     count: 5000,
                     type: 1
                 }
+            },
+            humidityGraphOptions: {
+                title: {
+                    text: 'Humidity Graph'
+                },
+                xAxis: {
+                    type: 'time',
+                    splitLine: {
+                        show: false
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%'],
+                    splitLine: {
+                        show: false
+                    }
+                },
+                legend: {
+                    show: true,
+                    top: '0px'
+                },
+                dataZoom: [
+                    {
+                        show: true,
+                        realtime: true,
+                        start: 65,
+                        end: 100
+                    }
+                ],
+                grid: {
+                    bottom: '80px'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        animation: false
+                    },
+                    formatter: function (component) {
+                        let date = component[0].value[0]
+                        return `${date.getDate()}/${(date.getMonth() + 1)}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}<br><br>` +
+                            component.map(item => `<span style="color: ${item.color}">${item.seriesName}</span> : ${item.value[1]} %`).join('<br>')
+                    }
+                },
+                series: [],
+                paginate: {
+                    page: 1,
+                    count: 5000,
+                    type: 2
+                }
             }
         }
     },
@@ -165,6 +220,37 @@ export default {
             })
             graph.setOptions(this.temperatureGraphOptions)
         },
+        async loadHumidityGraphData () {
+            let graph = this.$refs.humidityGraph
+            graph.showLoading({
+                text: 'Loading…',
+                color: '#4ea397',
+                maskColor: 'rgba(255, 255, 255, 0.4)'
+            })
+            let humidityData = await this.readSensorData(this.humidityGraphOptions.paginate)
+            graph.hideLoading()
+            this.humidityGraphOptions.paginate.page = humidityData.paginate.page + 1
+
+            Object.keys(humidityData.data).forEach((deviceId) => {
+                // each device
+                if (this.humidityGraphOptions.series.filter(series => series.deviceId === deviceId).length === 0) {
+                    this.humidityGraphOptions.series.push({
+                        name: `传感器 ${deviceId}`,
+                        type: 'line',
+                        showSymbol: false,
+                        deviceId,
+                        data: this.processData(humidityData.data[deviceId].data)
+                    })
+                } else {
+                    this.humidityGraphOptions.series.forEach(series => {
+                        if (series.deviceId === deviceId) {
+                            series.data = series.concat(this.processData(humidityData.data[deviceId].data))
+                        }
+                    })
+                }
+            })
+            graph.setOptions(this.humidityGraphOptions)
+        },
         processData (rawData) {
             return rawData.map((row) => {
                 return {
@@ -181,6 +267,7 @@ export default {
     async mounted () {
         this.loadAllDevices()
         this.loadTemperatureData()
+        this.loadHumidityGraphData()
     }
 }
 </script>

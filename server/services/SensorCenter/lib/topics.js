@@ -47,14 +47,37 @@ SensorCenter.prototype.defaultTopics = {
                 let length = data.temperature_record.length
                 data.temperature_record.reverse().forEach(record => {
                     let recDate = (!record.delta && record.delta !== 0) ? receivedDate : new Date(receivedDate.getTime() + ((record.delta + 1 - length) * data.measure_interval * 1000))
-                    console.log('delta', record.delta, recDate)
                     task.then(SensorData.create({
                         value: record.temperature_value,
                         device_mac: clientMacAddr,
                         from_device_id: device.deviceId,
                         data_type: dataTypes.TEMPERATURE,
                         store_at: recDate
+                    })).then(SensorData.create({
+                        value: record.humidity_value,
+                        device_mac: clientMacAddr,
+                        from_device_id: device.deviceId,
+                        data_type: dataTypes.HUMIDITY,
+                        store_at: recDate
                     }))
+                    if (record.pressure_value !== -1) {
+                        task.then(SensorData.create({
+                            value: record.pressure_value,
+                            device_mac: clientMacAddr,
+                            from_device_id: device.deviceId,
+                            data_type: dataTypes.PRESSURE,
+                            store_at: recDate
+                        }))
+                    }
+                    if (data.battery_vcc > 0) {
+                        task.then(SensorData.create({
+                            value: data.battery_vcc,
+                            device_mac: clientMacAddr,
+                            from_device_id: device.deviceId,
+                            data_type: dataTypes.VOLTAGE,
+                            store_at: recDate
+                        }))
+                    }
                 })
                 await task
             }
