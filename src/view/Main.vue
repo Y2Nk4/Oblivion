@@ -1,5 +1,5 @@
 <template>
-    <el-container class="main" id="main">
+    <el-container class="main" id="main" v-loading.fullscreen.lock="isPageLoading">
         <common-sidebar/>
         <el-container>
             <el-main>
@@ -16,9 +16,9 @@
                         border
                         style="width: 100%">
                         <el-table-column
-                            prop="deviceId"
+                            prop="_id"
                             label="Device ID"
-                            width="100px">
+                            width="140px">
                         </el-table-column>
                         <el-table-column
                             prop="device_name"
@@ -31,6 +31,12 @@
                         <el-table-column
                             prop="device_type"
                             label="Device Type">
+                        </el-table-column>
+                        <el-table-column
+                            label="Description">
+                            <template slot-scope="scope">
+                                <el-button type="text" @click="showEditDeviceDescription(scope.row)">{{ scope.row.description || 'Not Specified' }}</el-button>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             label="Status">
@@ -75,6 +81,7 @@ export default {
         return {
             CurrentTab: 'Glance',
             allDevices: [],
+            isPageLoading: false,
             temperatureGraphOptions: {
                 title: {
                     text: 'Temperature Graph'
@@ -181,10 +188,31 @@ export default {
     methods: {
         ...mapActions({
             fetchAllDevices: 'device/getAllDevices',
+            editDeviceDescription: 'device/editDeviceDescription',
             readSensorData: 'sensorData/readSensorData'
         }),
         changeTab () {
 
+        },
+        async showEditDeviceDescription (row) {
+            this.$prompt(null, 'Input the description', {
+                confirmButtonText: 'yes',
+                cancelButtonText: 'cancel',
+                inputValue: row.description
+            }).then(async ({ value }) => {
+                this.isPageLoading = true
+                await this.editDeviceDescription({
+                    deviceId: row._id,
+                    description: value
+                })
+                await this.loadAllDevices()
+                this.isPageLoading = false
+
+                this.$message({
+                    type: 'success',
+                    message: 'Updated description'
+                })
+            }).catch(() => {})
         },
         async loadAllDevices () {
             this.allDevices = await this.fetchAllDevices()

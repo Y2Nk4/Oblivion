@@ -1,6 +1,7 @@
 let SensorData = require('../../../../models/SensorData')
 let SensorDataResource = require('../../../../resources/SensorData')
 let formatValidationError = require('../../../../helpers/formatValidationError')
+let dayjs = require('dayjs')
 
 async function readSensorData (ctx) {
     ctx.checkQuery('type').notEmpty('Type cannot be empty').toInt()
@@ -27,7 +28,10 @@ async function readSensorData (ctx) {
 
     await Promise.all(deviceIds.map((deviceId) => {
         return SensorData.find(Object.assign(filter, {
-            from_device_id: deviceId
+            from_device_id: deviceId,
+            store_at: {
+                $gt: dayjs().subtract(2, 'days').toDate()
+            }
         }), { device_mac: 0 })
             .sort({store_at: -1}).skip((page - 1) * count).limit(count)
             .then(result => {
@@ -37,7 +41,6 @@ async function readSensorData (ctx) {
                 }
             })
     }))
-
 
     return ctx.success({
         data: data,

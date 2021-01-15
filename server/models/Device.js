@@ -33,12 +33,13 @@ let schema = new mongoose.Schema({
         unique: 'device mac duplicated',
         required: true
     },
+    description: String,
     metas: mongoose.Schema.Types.Mixed,
     device_type: String,
     last_received: Date,
     registered_at: Date
 })
-schema.plugin(mongo.AutoIncrement, {inc_field: 'deviceId'})
+/* schema.plugin(mongo.AutoIncrement, {inc_field: 'deviceId'}) */
 schema.plugin(beautifyUnique)
 schema.loadClass(Device)
 schema.index({ device_name: 1, device_mac: 1 }, { unique: true })

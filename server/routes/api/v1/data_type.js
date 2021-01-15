@@ -1,12 +1,12 @@
-let manageDevice = require('../../../controllers/api/v1/device/manageDevice')
+let manageDataType = require('../../../controllers/api/v1/dataType/manageDataType')
 let userAuth = require('../../../middlewares/userAuth')
 let koaRouter = require('koa-router')
 const router = koaRouter()
 const privateRouter = koaRouter()
 privateRouter.use(userAuth())
 
-privateRouter.get('/getAllDevices', manageDevice.getAllDevices)
-privateRouter.post('/editDeviceDescription', manageDevice.editDeviceDescription)
+privateRouter.get('/getAllDataTypes', manageDataType.getAllDataTypes)
+privateRouter.post('/addDataType', manageDataType.addDataType)
 
 router.use(privateRouter.routes())
 module.exports = router

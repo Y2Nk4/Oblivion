@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router'
 import Main from '../view/Main'
+import AreaMain from '../view/area/AreaMain'
 import Login from '../view/Login'
 import store from '../store'
 import Vue from 'vue'
@@ -12,13 +13,23 @@ const router = new VueRouter({
         {
             path: '/',
             component: Main,
+            name: 'home',
             meta: {
                 headerMenuIndex: 'home'
             }
         },
         {
+            path: '/area',
+            component: AreaMain,
+            name: 'area.main',
+            meta: {
+                headerMenuIndex: 'area.main'
+            }
+        },
+        {
             path: '/login',
             component: Login,
+            name: 'login',
             meta: {
                 noAuth: true
             }

@@ -5,6 +5,7 @@
         </div>
         <el-menu :default-active="menuActiveIndex" class="common-sidebar-menu" @select="handleSelect">
             <el-menu-item index="home">Home</el-menu-item>
+            <el-menu-item index="area.main">Area</el-menu-item>
             <el-menu-item index="settings">Settings</el-menu-item>
             <el-menu-item index="logout">Log Out</el-menu-item>
         </el-menu>
@@ -22,8 +23,9 @@ export default {
         }
     },
     methods: {
-        handleSelect () {
-
+        handleSelect (current) {
+            console.log('current', current, this)
+            this.$router.push({ name: current })
         }
     },
     mounted () {
