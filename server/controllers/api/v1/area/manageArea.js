@@ -71,6 +71,19 @@ async function editDataSource (ctx) {
     return ctx.success()
 }
 
+async function removeArea (ctx) {
+    ctx.checkBody('areaId').notEmpty()
+    if (ctx.errors) {
+        return ctx.error(ctx.formatValidationError(ctx.errors), 400)
+    }
+
+    let result = await Area.deleteOne({
+        _id: ctx.request.body.areaId
+    })
+
+    return ctx.success(result)
+}
+
 module.exports = {
-    listArea, editArea, addArea, editDataSource
+    listArea, editArea, addArea, editDataSource, removeArea
 }

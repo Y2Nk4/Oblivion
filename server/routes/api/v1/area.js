@@ -9,6 +9,7 @@ privateRouter.get('/getAllAreas', manageArea.listArea)
 privateRouter.post('/editArea', manageArea.editArea)
 privateRouter.post('/addArea', manageArea.addArea)
 privateRouter.post('/editDataSource', manageArea.editDataSource)
+privateRouter.post('/removeArea', manageArea.removeArea)
 
 router.use(privateRouter.routes())
 module.exports = router

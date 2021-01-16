@@ -50,13 +50,13 @@ SensorCenter.prototype.defaultTopics = {
                     task.then(SensorData.create({
                         value: record.temperature_value,
                         device_mac: clientMacAddr,
-                        from_device_id: device.deviceId,
+                        from_device_id: device._id,
                         data_type: dataTypes.TEMPERATURE,
                         store_at: recDate
                     })).then(SensorData.create({
                         value: record.humidity_value,
                         device_mac: clientMacAddr,
-                        from_device_id: device.deviceId,
+                        from_device_id: device._id,
                         data_type: dataTypes.HUMIDITY,
                         store_at: recDate
                     }))
@@ -64,7 +64,7 @@ SensorCenter.prototype.defaultTopics = {
                         task.then(SensorData.create({
                             value: record.pressure_value,
                             device_mac: clientMacAddr,
-                            from_device_id: device.deviceId,
+                            from_device_id: device._id,
                             data_type: dataTypes.PRESSURE,
                             store_at: recDate
                         }))
@@ -73,7 +73,7 @@ SensorCenter.prototype.defaultTopics = {
                         task.then(SensorData.create({
                             value: data.battery_vcc,
                             device_mac: clientMacAddr,
-                            from_device_id: device.deviceId,
+                            from_device_id: device._id,
                             data_type: dataTypes.VOLTAGE,
                             store_at: recDate
                         }))

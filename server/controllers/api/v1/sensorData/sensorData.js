@@ -1,7 +1,9 @@
 let SensorData = require('../../../../models/SensorData')
+let Device = require('../../../../models/Device')
 let SensorDataResource = require('../../../../resources/SensorData')
 let formatValidationError = require('../../../../helpers/formatValidationError')
 let dayjs = require('dayjs')
+let _ = require('lodash')
 
 async function readSensorData (ctx) {
     ctx.checkQuery('type').notEmpty('Type cannot be empty').toInt()
@@ -20,6 +22,10 @@ async function readSensorData (ctx) {
 
     console.log(count, lastId)
 
+    let devices = await Device.find({
+        _id: { $in: deviceIds }
+    })
+
     let filter = {}
     if (ctx.query.type) filter.data_type = ctx.query.type
     // if (lastId) filter['_id'] = { $gt: lastId }
@@ -33,7 +39,7 @@ async function readSensorData (ctx) {
                 $gt: dayjs().subtract(2, 'days').toDate()
             }
         }), { device_mac: 0 })
-            .sort({store_at: -1}).skip((page - 1) * count).limit(count)
+            .sort({ store_at: -1 }).skip((page - 1) * count).limit(count)
             .then(result => {
                 if (result) {
                     data[deviceId] = data[deviceId] || {}
@@ -44,6 +50,7 @@ async function readSensorData (ctx) {
 
     return ctx.success({
         data: data,
+        devices: _.keyBy(devices, '_id'),
         paginate: {
             page,
             deviceIds

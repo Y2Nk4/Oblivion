@@ -5,7 +5,6 @@ class Area {
 }
 
 let schema = new mongoose.Schema({
-    _id: Number,
     name: {
         type: String,
         required: true
@@ -24,7 +23,7 @@ let schema = new mongoose.Schema({
     ],
     created_at: Date
 })
-schema.plugin(mongo.AutoIncrement)
+// schema.plugin(mongo.AutoIncrement)
 schema.loadClass(Area)
 
 module.exports = mongo.model('areas', schema)

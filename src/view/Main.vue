@@ -81,6 +81,7 @@ export default {
         return {
             CurrentTab: 'Glance',
             allDevices: [],
+            mappedAllDevices: {},
             isPageLoading: false,
             temperatureGraphOptions: {
                 title: {
@@ -229,10 +230,11 @@ export default {
             this.temperatureGraphOptions.paginate.page = temperatureData.paginate.page + 1
 
             Object.keys(temperatureData.data).forEach((deviceId) => {
+                let device = temperatureData.devices[deviceId]
                 // each device
                 if (this.temperatureGraphOptions.series.filter(series => series.deviceId === deviceId).length === 0) {
                     this.temperatureGraphOptions.series.push({
-                        name: `传感器 ${deviceId}`,
+                        name: `传感器 ${device && device.description ? device.description : deviceId}`,
                         type: 'line',
                         showSymbol: false,
                         deviceId,
@@ -260,10 +262,11 @@ export default {
             this.humidityGraphOptions.paginate.page = humidityData.paginate.page + 1
 
             Object.keys(humidityData.data).forEach((deviceId) => {
+                let device = humidityData.devices[deviceId]
                 // each device
                 if (this.humidityGraphOptions.series.filter(series => series.deviceId === deviceId).length === 0) {
                     this.humidityGraphOptions.series.push({
-                        name: `传感器 ${deviceId}`,
+                        name: `传感器 ${device && device.description ? device.description : deviceId}`,
                         type: 'line',
                         showSymbol: false,
                         deviceId,
